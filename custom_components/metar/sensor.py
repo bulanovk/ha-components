@@ -12,25 +12,15 @@ except:
     from urllib.request import urlopen
 from metar import Metar
 
-DOMAIN = 'metar'
-CONF_AIRPORT_NAME = 'airport_name'
-CONF_AIRPORT_CODE = 'airport_code'
-CONF_TOKEN = 'airport_code'
+from .const import SENSOR_TYPES
+
+CONF_AIRPORT_NAME = 'name'
+CONF_AIRPORT_CODE = 'code'
+CONF_TOKEN = 'token'
 SCAN_INTERVAL = timedelta(seconds=3600)
 BASE_URL = "https://tgftp.nws.noaa.gov/data/observations/metar/stations/"
 
 _LOGGER = logging.getLogger(__name__)
-
-SENSOR_TYPES = {
-    'time': ['Updated ', None],
-    'weather': ['Condition', None],
-    'temperature': ['Temperature', 'C'],
-    'wind': ['Wind speed', None],
-    'pressure': ['Pressure', None],
-    'visibility': ['Visibility', None],
-    'precipitation': ['Precipitation', None],
-    'sky': ['Sky', None],
-}
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_AIRPORT_NAME): cv.string,
