@@ -63,7 +63,8 @@ class MetarSensor(Entity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return self._name + " " + self._airport_name;
+        return self._airport_name + "." + self._name;
+        # return self._name + " " + self._airport_name;
 
     @property
     def state(self):
