@@ -14,8 +14,8 @@ PLATFORMS: list[Platform] = [
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    hass.state.setdefault(DOMAIN, {})
-    hass.state[DOMAIN]["token"] = config[DOMAIN][TOKEN_FIELD]
+    hass.data.setdefault(DOMAIN,{})
+    hass.data[DOMAIN]["token"] = config[DOMAIN][TOKEN_FIELD]
     sensors = config[DOMAIN]["sensor"]
     for sensor in sensors:
         dev = []
