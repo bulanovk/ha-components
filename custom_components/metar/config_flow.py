@@ -20,12 +20,6 @@ class MetarFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> config_entries.FlowResult:
         """Handle a flow initialized by the user."""
         _errors = {}
-        if user_input is None:
-            return self.async_create_entry(
-                title=user_input[CONF_USERNAME],
-                data=user_input,
-            )
-
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
