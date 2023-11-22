@@ -14,6 +14,9 @@ PLATFORMS: list[Platform] = [
 ]
 
 
+async def async_setup(hass, config):
+    return True
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up The metar component."""
     # @TODO: Add setup code.
