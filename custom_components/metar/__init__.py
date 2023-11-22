@@ -1,10 +1,9 @@
 import logging
 
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import SENSOR_TYPES, DOMAIN
+from .const import SENSOR_TYPES, DOMAIN, TOKEN_FIELD, CONF_AIRPORT_NAME, CONF_AIRPORT_CODE
 from .sensor import MetarData, MetarSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -14,29 +13,13 @@ PLATFORMS: list[Platform] = [
 ]
 
 
-async def async_setup(hass, config):
-    return True
-
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up The metar component."""
-    # @TODO: Add setup code.
-    _LOGGER.info("KOBU Config %s", entry)
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     hass.state.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = { "loing"}
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
-
+    hass.state[DOMAIN]["token"] = config[DOMAIN][TOKEN_FIELD]
+    sensors = config[DOMAIN]["sensor"]
+    for sensor in sensors:
+        dev = []
+        airport = {'location': str(sensor.get(CONF_AIRPORT_NAME)), 'code': str(sensor.get(CONF_AIRPORT_CODE))}
+        data = MetarData(airport)
+        await hass.config_entries.async_forward_entry_setups(config, PLATFORMS)
     return True
-
-
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Handle removal of an entry."""
-    if unloaded := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        hass.data[DOMAIN].pop(entry.entry_id)
-    return unloaded
-
-
-async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Reload config entry."""
-    await async_unload_entry(hass, entry)
-    await async_setup_entry(hass, entry)
