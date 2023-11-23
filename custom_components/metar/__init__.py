@@ -1,14 +1,17 @@
-from homeassistant import core
-from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-from .const import METAR_TOKEN_FIELD, DOMAIN
+from homeassistant import core
 from homeassistant.config_entries import ConfigEntry
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+from .const import METAR_TOKEN_FIELD, DOMAIN
+
+CONFIG_SCHEMA = vol.Schema(
     {
-        vol.Required(METAR_TOKEN_FIELD): cv.string
-    }
+        DOMAIN: vol.Schema({
+            vol.Required(METAR_TOKEN_FIELD): cv.string
+        })
+    },
+    extra=vol.ALLOW_EXTRA,
 )
 
 
