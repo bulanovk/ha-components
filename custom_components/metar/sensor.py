@@ -31,8 +31,16 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-async def async_setup_platform(hass: core.HomeAssistant, config: dict, async_add_entities, discovery_info=None):
-    _LOGGER.info("KOBU c=%s d=%s", config,discovery_info)
+async def async_setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
+    _LOGGER.info("KOBU c=%s d=%s", conf, discovery_info)
+    config = discovery_info["cfg"]
+    airport = {'location': str(config.get(CONF_AIRPORT_NAME)), 'code': str(config.get(CONF_AIRPORT_CODE))}
+
+    data = MetarData(airport)
+    dev = []
+    for variable in config[CONF_MONITORED_CONDITIONS]:
+        dev.append(MetarSensor(airport, data, variable, SENSOR_TYPES[variable][1]))
+    add_entities(dev, True)
 
 
 class MetarSensor(Entity):
