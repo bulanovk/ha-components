@@ -37,6 +37,7 @@ async def async_setup_platform(hass: core.HomeAssistant, conf: dict, add_entitie
     if discovery_info is not None:
         config: dict = discovery_info["cfg"]
         data: MetarData = MetarData(str(config.get(CONF_AIRPORT_CODE)))
+        await data.update
         dev = []
 
         for variable in config.get(CONF_MONITORED_CONDITIONS, ["temperature"]):
@@ -49,7 +50,7 @@ class MetarData:
         """Initialize the data object."""
         self._airport_code = airport_code
         self.sensor_data = None
-        self.update()
+        # await self.update()
 
     @Throttle(SCAN_INTERVAL)
     async def update(self):
