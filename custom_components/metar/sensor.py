@@ -102,7 +102,10 @@ class MetarSensorEntity(Entity):
         """Return the unit of measurement."""
         return self._unit_of_measurement
 
-    def update(self):
+    async def async_update(self):
+        self._update()
+
+    def _update(self):
         """Get the latest data from Metar and updates the states."""
 
         try:
