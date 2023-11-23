@@ -32,7 +32,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 
 async def async_setup_platform(hass: core.HomeAssistant, config: dict, async_add_entities, discovery_info=None):
-    _LOGGER.info("KOBU %s", config)
+    _LOGGER.info("KOBU c=%s d=%s", config,discovery_info)
 
 
 class MetarSensor(Entity):
