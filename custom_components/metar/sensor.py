@@ -3,6 +3,7 @@ from datetime import timedelta
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
+from homeassistant import core
 from homeassistant.const import CONF_MONITORED_CONDITIONS
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 from homeassistant.helpers.entity import Entity
@@ -30,14 +31,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-async def async_setup_entry(hass, config, async_add_devices):
-    airport = {'location': str(config.get(CONF_AIRPORT_NAME)), 'code': str(config.get(CONF_AIRPORT_CODE))}
-
-    data = MetarData(airport)
-    dev = []
-    for variable in config[CONF_MONITORED_CONDITIONS]:
-        dev.append(MetarSensor(airport, data, variable, SENSOR_TYPES[variable][1]))
-    async_add_devices(dev, True)
+async def async_setup_platform(hass: core.HomeAssistant, config, async_add_devices):
+    _LOGGER.info("KOBU %s", config)
 
 
 class MetarSensor(Entity):
