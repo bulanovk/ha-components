@@ -32,12 +32,11 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-async def async_setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
+def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
     _LOGGER.debug("Sensor Init config=%s discovery=%s", conf, discovery_info)
     if discovery_info is not None:
         config: dict = discovery_info["cfg"]
         data: MetarData = MetarData(str(config.get(CONF_AIRPORT_CODE)))
-        await data.update()
         dev = []
 
         for variable in config.get(CONF_MONITORED_CONDITIONS, ["temperature"]):
@@ -50,10 +49,10 @@ class MetarData:
         """Initialize the data object."""
         self._airport_code = airport_code
         self.sensor_data = None
-        # await self.update()
+        self.update()
 
     @Throttle(SCAN_INTERVAL)
-    async def update(self):
+    def update(self):
         url = BASE_URL + self._airport_code + ".TXT"
         try:
             urlh = urlopen(url)
@@ -103,10 +102,7 @@ class MetarSensorEntity(Entity):
         """Return the unit of measurement."""
         return self._unit_of_measurement
 
-    async def async_update(self):
-        self._update()
-
-    def _update(self):
+    def update(self):
         """Get the latest data from Metar and updates the states."""
 
         try:
