@@ -52,7 +52,7 @@ class MetarData:
         self.update()
 
     @Throttle(SCAN_INTERVAL)
-    def update(self):
+    async def update(self):
         url = BASE_URL + self._airport_code + ".TXT"
         try:
             urlh = urlopen(url)
