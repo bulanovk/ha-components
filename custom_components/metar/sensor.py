@@ -25,7 +25,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_AIRPORT_NAME): cv.string,
     vol.Required(CONF_AIRPORT_CODE): cv.string,
-    vol.Required(TOKEN_FIELD): cv.string,
+    vol.Optional(TOKEN_FIELD): cv.string,
     vol.Optional(CONF_MONITORED_CONDITIONS, default=[]):
         vol.All(cv.ensure_list, [vol.In(SENSOR_TYPES)]),
 })
