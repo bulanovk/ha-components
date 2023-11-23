@@ -38,7 +38,10 @@ async def async_setup_platform(hass: core.HomeAssistant, conf: dict, add_entitie
 
     data = MetarData(airport)
     dev = []
-    for variable in config[CONF_MONITORED_CONDITIONS]:
+    conditions = ["temperature"]
+    if config[CONF_MONITORED_CONDITIONS] is not None:
+        conditions = config[CONF_MONITORED_CONDITIONS]
+    for variable in conditions:
         dev.append(MetarSensor(airport, data, variable, SENSOR_TYPES[variable][1]))
     add_entities(dev, True)
 
