@@ -32,16 +32,17 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 
 def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
-    _LOGGER.info("KOBU c=%s d=%s", conf, discovery_info)
-    config: dict = discovery_info["cfg"]
-    airport = {'location': str(config.get(CONF_AIRPORT_NAME)), 'code': str(config.get(CONF_AIRPORT_CODE))}
+    _LOGGER.debug("Sensor Init config=%s discovery=%s", conf, discovery_info)
+    if discovery_info is not None:
+        config: dict = discovery_info["cfg"]
+        airport = {'location': str(config.get(CONF_AIRPORT_NAME)), 'code': str(config.get(CONF_AIRPORT_CODE))}
 
-    data = MetarData(airport)
-    dev = []
-    conditions = config.get(CONF_MONITORED_CONDITIONS, ["temperature"])
-    for variable in conditions:
-        dev.append(MetarSensor(airport, data, variable, SENSOR_TYPES[variable][1]))
-    add_entities(dev, True)
+        data = MetarData(airport)
+        dev = []
+
+        for variable in config.get(CONF_MONITORED_CONDITIONS, ["temperature"]):
+            dev.append(MetarSensor(airport, data, variable, SENSOR_TYPES[variable][1]))
+        add_entities(dev, True)
 
 
 class MetarSensor(Entity):
@@ -133,7 +134,7 @@ class MetarData:
                 _LOGGER.error("No data for %s\n\n", self._airport_code)
         except Metar.ParserError as exc:
             _LOGGER.error("METAR code: %s", line)
-            _LOGGER.error(string.join(exc.args, ", ")+"\n", )
+            _LOGGER.error(string.join(exc.args, ", ") + "\n", )
         except:
             import traceback
             _LOGGER.error(traceback.format_exc())
