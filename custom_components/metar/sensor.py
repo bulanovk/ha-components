@@ -31,7 +31,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-async def async_setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
+def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
     _LOGGER.info("KOBU c=%s d=%s", conf, discovery_info)
     config: dict = discovery_info["cfg"]
     airport = {'location': str(config.get(CONF_AIRPORT_NAME)), 'code': str(config.get(CONF_AIRPORT_CODE))}

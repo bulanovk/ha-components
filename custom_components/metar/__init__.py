@@ -17,10 +17,10 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 
-async def async_setup(hass: core.HomeAssistant, config: dict) -> bool:
+def setup(hass: core.HomeAssistant, config: dict) -> bool:
     """Set up the Home Heat Calc component."""
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][METAR_TOKEN_FIELD] = config[DOMAIN][METAR_TOKEN_FIELD]
     for cfg in config[DOMAIN]["sensor"]:
-      hass.async_create_task(hass.helpers.discovery.async_load_platform('sensor', DOMAIN, {"cfg":cfg}, config))
+        hass.helpers.discovery.load_platform('sensor', DOMAIN, {"cfg": cfg}, config)
     return True
