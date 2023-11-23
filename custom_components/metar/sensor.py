@@ -1,4 +1,5 @@
 import logging
+import string
 from datetime import timedelta
 
 import homeassistant.helpers.config_validation as cv
@@ -35,23 +36,53 @@ def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery
     _LOGGER.debug("Sensor Init config=%s discovery=%s", conf, discovery_info)
     if discovery_info is not None:
         config: dict = discovery_info["cfg"]
-        airport = {'location': str(config.get(CONF_AIRPORT_NAME)), 'code': str(config.get(CONF_AIRPORT_CODE))}
-
-        data = MetarData(airport)
+        data: MetarData = MetarData(str(config.get(CONF_AIRPORT_CODE)))
         dev = []
 
         for variable in config.get(CONF_MONITORED_CONDITIONS, ["temperature"]):
-            dev.append(MetarSensor(airport, data, variable, SENSOR_TYPES[variable][1]))
+            dev.append(MetarSensorEntity(str(config.get(CONF_AIRPORT_NAME)), data, variable, SENSOR_TYPES[variable][1]))
         add_entities(dev, True)
 
 
-class MetarSensor(Entity):
+class MetarData:
+    def __init__(self, airport_code: string):
+        """Initialize the data object."""
+        self._airport_code = airport_code
+        self.sensor_data = None
+        self.update()
 
-    def __init__(self, airport, weather_data, sensor_type, temp_unit):
+    @Throttle(SCAN_INTERVAL)
+    def update(self):
+        url = BASE_URL + self._airport_code + ".TXT"
+        try:
+            urlh = urlopen(url)
+            report = ''
+            for line in urlh:
+                if not isinstance(line, str):
+                    line = line.decode()
+                if line.startswith(self._airport_code):
+                    report = line.strip()
+                    self.sensor_data = Metar.Metar(line)
+                    _LOGGER.info("METAR %s", self.sensor_data.string())
+                    break
+            if not report:
+                _LOGGER.error("No data for %s\n\n", self._airport_code)
+        except Metar.ParserError as exc:
+            _LOGGER.error("METAR code: %s", line)
+            _LOGGER.error(string.join(exc.args, ", ") + "\n", )
+        except:
+            import traceback
+            _LOGGER.error(traceback.format_exc())
+            _LOGGER.error("Error retrieving %s data \n", self._airport_code)
+
+
+class MetarSensorEntity(Entity):
+
+    def __init__(self, name: string, weather_data: MetarData, sensor_type, temp_unit):
         self._state = None
         self._name = SENSOR_TYPES[sensor_type][0]
         self._unit_of_measurement = SENSOR_TYPES[sensor_type][1]
-        self._airport_name = airport["location"]
+        self._airport_name = name
         self.type = sensor_type
         self.weather_data = weather_data
 
@@ -107,35 +138,3 @@ class MetarSensor(Entity):
             self._state = None
             _LOGGER.warning(
                 "Condition is currently not available: %s", self.type)
-
-
-class MetarData:
-    def __init__(self, airport):
-        """Initialize the data object."""
-        self._airport_code = airport["code"]
-        self.sensor_data = None
-        self.update()
-
-    @Throttle(SCAN_INTERVAL)
-    def update(self):
-        url = BASE_URL + self._airport_code + ".TXT"
-        try:
-            urlh = urlopen(url)
-            report = ''
-            for line in urlh:
-                if not isinstance(line, str):
-                    line = line.decode()
-                if line.startswith(self._airport_code):
-                    report = line.strip()
-                    self.sensor_data = Metar.Metar(line)
-                    _LOGGER.info("METAR %s", self.sensor_data.string())
-                    break
-            if not report:
-                _LOGGER.error("No data for %s\n\n", self._airport_code)
-        except Metar.ParserError as exc:
-            _LOGGER.error("METAR code: %s", line)
-            _LOGGER.error(string.join(exc.args, ", ") + "\n", )
-        except:
-            import traceback
-            _LOGGER.error(traceback.format_exc())
-            _LOGGER.error("Error retrieving %s data \n", self._airport_code)
