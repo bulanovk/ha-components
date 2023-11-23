@@ -2,12 +2,22 @@ import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant import core
 
-from .const import METAR_TOKEN_FIELD, DOMAIN
+from .const import *
+
+SENSOR_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_AIRPORT_CODE): cv.string,
+        vol.Required(CONF_AIRPORT_NAME): cv.string,
+
+    }, extra=vol.ALLOW_EXTRA
+)
 
 CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema({
-            vol.Required(METAR_TOKEN_FIELD): cv.string
+            vol.Required(METAR_TOKEN_FIELD): cv.string,
+            vol.Required("sensor"): cv.ensure_list_csv(SENSOR_SCHEMA),
+            vol.Optional(CONF_MONITORED_CONDITIONS, None, ["temperature"]): cv.ensure_list_csv(cv.string),
         },
             extra=vol.ALLOW_EXTRA,
         )

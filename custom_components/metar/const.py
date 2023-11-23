@@ -1,3 +1,5 @@
+from homeassistant.const import CONF_MONITORED_CONDITIONS
+
 SENSOR_TYPES = {
     'time': ['Updated ', None],
     'weather': ['Condition', None],
