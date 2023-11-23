@@ -32,7 +32,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
+async def async_setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
     _LOGGER.debug("Sensor Init config=%s discovery=%s", conf, discovery_info)
     if discovery_info is not None:
         config: dict = discovery_info["cfg"]
