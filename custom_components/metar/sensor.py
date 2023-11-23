@@ -127,14 +127,14 @@ class MetarData:
                 if line.startswith(self._airport_code):
                     report = line.strip()
                     self.sensor_data = Metar.Metar(line)
-                    _LOGGER.info("METAR ", self.sensor_data.string())
+                    _LOGGER.info("METAR %s", self.sensor_data.string())
                     break
             if not report:
-                _LOGGER.error("No data for ", self._airport_code, "\n\n")
+                _LOGGER.error("No data for %s\n\n", self._airport_code)
         except Metar.ParserError as exc:
-            _LOGGER.error("METAR code: ", line)
-            _LOGGER.error(string.join(exc.args, ", "), "\n")
+            _LOGGER.error("METAR code: %s", line)
+            _LOGGER.error(string.join(exc.args, ", ")+"\n", )
         except:
             import traceback
             _LOGGER.error(traceback.format_exc())
-            _LOGGER.error("Error retrieving", self._airport_code, "data", "\n")
+            _LOGGER.error("Error retrieving %s data \n", self._airport_code)
