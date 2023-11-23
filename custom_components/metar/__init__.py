@@ -8,7 +8,10 @@ CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema({
             vol.Required(METAR_TOKEN_FIELD): cv.string
-        })
+        },
+            extra=vol.ALLOW_EXTRA,
+        )
+
     },
     extra=vol.ALLOW_EXTRA,
 )
