@@ -12,3 +12,5 @@ DOMAIN = "metar"
 TOKEN_FIELD = "token"
 CONF_AIRPORT_NAME = 'name'
 CONF_AIRPORT_CODE = 'code'
+METAR_TOKEN_FIELD = "token"
+
