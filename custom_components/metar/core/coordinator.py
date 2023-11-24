@@ -33,4 +33,4 @@ class MetarCoordinator:
             for airport in data['data']:
                 airport_name = airport['icao']
                 _LOGGER.info("Coordinator: METAR ICAO=%s %s", airport_name, airport)
-                _LOGGER.info("Coordinator: METAR ICAO=%s Temp %s", airport_name, airport['temperature'['celsius']])
+                _LOGGER.info("Coordinator: METAR ICAO=%s Temp %s", airport_name, airport['temperature']['celsius'])
