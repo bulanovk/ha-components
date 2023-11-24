@@ -35,7 +35,7 @@ def setup(hass: ha_core.HomeAssistant, config: dict) -> bool:
     """Set up the Home Heat Calc component."""
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][CONF_TOKEN] = config[DOMAIN][CONF_TOKEN]
-    coordinator: MetarCoordinator = MetarCoordinator(config[DOMAIN][CONF_TOKEN])
+    coordinator: MetarCoordinator = MetarCoordinator(hass)
     for cfg in config[DOMAIN]["sensor"]:
         coordinator.add_code(cfg[CONF_AIRPORT_CODE])
         hass.helpers.discovery.load_platform('sensor', DOMAIN, {"cfg": cfg}, config)
