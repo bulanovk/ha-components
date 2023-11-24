@@ -39,7 +39,6 @@ def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery
     if discovery_info is not None:
         config: dict = discovery_info["cfg"]
         data: MetarData = MetarData(str(config.get(CONF_AIRPORT_CODE)), hass.data[DOMAIN][CONF_TOKEN])
-        asyncio.run(data.async_update())  # okay
         dev = []
 
         for variable in config.get(CONF_MONITORED_CONDITIONS, ["temperature"]):
@@ -54,15 +53,7 @@ class MetarData:
         self.sensor_data = None
         self.async_sensor_data = None
         self._token = token
-        self._url = f'https://api.checkwx.com/metar/{self._airport_code}/decoded?x-api-key={self._token}'
         self.update()
-
-    @Throttle(SCAN_INTERVAL)
-    async def async_update(self):
-        async with httpx.AsyncClient() as client:
-            resp = await client.get(self._url)
-            self.async_sensor_data = resp.json()
-            _LOGGER.info("KOBU: METAR %s", self.async_sensor_data)
 
     @Throttle(SCAN_INTERVAL)
     def update(self):

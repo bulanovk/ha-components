@@ -1,4 +1,5 @@
 from homeassistant.const import CONF_MONITORED_CONDITIONS
+from homeassistant.const import CONF_SCAN_INTERVAL
 
 SENSOR_TYPES = {
     'time': ['Updated ', None],
