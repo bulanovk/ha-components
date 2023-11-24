@@ -28,4 +28,4 @@ class MetarCoordinator:
         async with httpx.AsyncClient() as client:
             resp = await client.get(url)
             data = resp.json()
-            _LOGGER.info("Coordinator: METAR %s", data.data)
+            _LOGGER.info("Coordinator: METAR %s", data['data'])
