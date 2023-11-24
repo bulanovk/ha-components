@@ -52,3 +52,4 @@ class MetarCoordinator:
                 data.time = airport['observed']
                 # data.weather = airport['conditions']['text']
                 self.sensors_data[data.name] = data
+                _LOGGER.info("METAR Station:\n %s", data)

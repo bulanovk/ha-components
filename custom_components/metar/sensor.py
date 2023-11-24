@@ -76,6 +76,7 @@ class MetarSensorEntity(Entity):
             return
 
         if self._coordinator.get(self._code) is None:
+            _LOGGER.info("METAR Data for %s is None", self._code)
             return
 
         try:
