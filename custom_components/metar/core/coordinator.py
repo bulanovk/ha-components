@@ -3,7 +3,7 @@ import string
 from datetime import timedelta
 from ..const import *
 import httpx
-from homeassistant import core
+from homeassistant import core as ha_core
 from homeassistant.util import Throttle
 
 SCAN_INTERVAL = timedelta(seconds=300)
@@ -12,7 +12,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class MetarCoordinator:
-    def __init__(self, haas: core.HomeAssistant):
+    def __init__(self, haas: ha_core.HomeAssistant):
         self._haas = haas
         self._sensors_data = None
         self._codes = []

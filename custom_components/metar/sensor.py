@@ -6,7 +6,7 @@ from datetime import timedelta
 import homeassistant.helpers.config_validation as cv
 import httpx
 import voluptuous as vol
-from homeassistant import core
+from homeassistant import core as ha_core
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 from homeassistant.helpers.entity import Entity
 from homeassistant.util import Throttle
@@ -33,7 +33,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
+def setup_platform(hass: ha_core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
     _LOGGER.debug("Sensor Init config=%s discovery=%s", conf, discovery_info)
     # loop = asyncio.get_running_loop()
     if discovery_info is not None:

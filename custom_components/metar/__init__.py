@@ -2,7 +2,7 @@ import asyncio
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-from homeassistant import core
+from homeassistant import core as ha_core
 
 from .const import *
 from .core.coordinator import MetarCoordinator
@@ -31,7 +31,7 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 
-def setup(hass: core.HomeAssistant, config: dict) -> bool:
+def setup(hass: ha_core.HomeAssistant, config: dict) -> bool:
     """Set up the Home Heat Calc component."""
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][CONF_TOKEN] = config[DOMAIN][CONF_TOKEN]
