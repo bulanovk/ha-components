@@ -1,10 +1,12 @@
 import logging
 import string
 from datetime import timedelta
-from ..const import *
+
 import httpx
 from homeassistant import core as ha_core
 from homeassistant.util import Throttle
+
+from ..const import *
 
 SCAN_INTERVAL = timedelta(seconds=300)
 
@@ -28,4 +30,7 @@ class MetarCoordinator:
         async with httpx.AsyncClient() as client:
             resp = await client.get(url)
             data = resp.json()
-            _LOGGER.info("Coordinator: METAR %s", data['data'])
+            for airport in data['data']:
+                airport_name = airport['icao']
+                _LOGGER.info("Coordinator: METAR ICAO=%s %s", airport_name, airport)
+                _LOGGER.info("Coordinator: METAR ICAO=%s Temp %s", airport_name, airport['temperature'['celsius']])
