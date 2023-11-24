@@ -50,5 +50,5 @@ class MetarCoordinator:
                 data.temp = airport['temperature']['celsius']
                 data.name = airport['icao']
                 data.time = airport['observed']
-                data.weather = airport['conditions']['text']
+                # data.weather = airport['conditions']['text']
                 self.sensors_data[data.name] = data
