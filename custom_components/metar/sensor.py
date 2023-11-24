@@ -35,11 +35,11 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
     _LOGGER.debug("Sensor Init config=%s discovery=%s", conf, discovery_info)
-    loop = asyncio.get_running_loop()
+    # loop = asyncio.get_running_loop()
     if discovery_info is not None:
         config: dict = discovery_info["cfg"]
         data: MetarData = MetarData(str(config.get(CONF_AIRPORT_CODE)), hass.data[DOMAIN][CONF_TOKEN])
-        asyncio.run_coroutine_threadsafe(data.async_update(), loop)  # okay
+        asyncio.run(data.async_update())  # okay
         dev = []
 
         for variable in config.get(CONF_MONITORED_CONDITIONS, ["temperature"]):
