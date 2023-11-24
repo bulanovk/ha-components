@@ -27,5 +27,5 @@ class MetarCoordinator:
         url = f'https://api.checkwx.com/metar/{code}/decoded?x-api-key={token}'
         async with httpx.AsyncClient() as client:
             resp = await client.get(url)
-            self._sensors_data = resp.json()
-            _LOGGER.info("Coordinator: METAR %s", self._sensors_data)
+            data = resp.json()
+            _LOGGER.info("Coordinator: METAR %s", data.data)

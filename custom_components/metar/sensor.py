@@ -111,6 +111,7 @@ class MetarSensorEntity(Entity):
         """Get the latest data from Metar and updates the states."""
         # self._hass.add_job(self._coordinator.async_update())
         try:
+            self._hass.add_job(self._coordinator.async_update())
             self.weather_data.update()
         except URLCallError:
             _LOGGER.error("Error when retrieving update data")

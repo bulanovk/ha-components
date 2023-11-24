@@ -40,5 +40,4 @@ def setup(hass: ha_core.HomeAssistant, config: dict) -> bool:
     for cfg in config[DOMAIN]["sensor"]:
         coordinator.add_code(cfg[CONF_AIRPORT_CODE])
         hass.helpers.discovery.load_platform('sensor', DOMAIN, {"cfg": cfg}, config)
-    hass.add_job(coordinator.async_update())
     return True
