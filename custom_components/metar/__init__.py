@@ -39,5 +39,7 @@ def setup(hass: ha_core.HomeAssistant, config: dict) -> bool:
     hass.data[DOMAIN][COORDINATOR] = coordinator
     for cfg in config[DOMAIN]["sensor"]:
         coordinator.add_code(cfg[CONF_AIRPORT_CODE])
+    hass.add_job(coordinator.async_update())
+    for cfg in config[DOMAIN]["sensor"]:
         hass.helpers.discovery.load_platform('sensor', DOMAIN, {"cfg": cfg}, config)
     return True

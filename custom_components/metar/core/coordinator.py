@@ -32,7 +32,7 @@ class MetarCoordinator:
         self._codes = []
 
     def get(self, code: string) -> MetarAirport:
-        return self.sensors_data[code]
+        return self.sensors_data.get(code)
 
     def add_code(self, code: string):
         self._codes.append(code)
