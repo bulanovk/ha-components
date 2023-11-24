@@ -1,3 +1,4 @@
+import datetime
 import logging
 import string
 from datetime import timedelta
@@ -13,11 +14,25 @@ SCAN_INTERVAL = timedelta(seconds=300)
 _LOGGER = logging.getLogger(__name__)
 
 
+class MetarAirport:
+    name: string
+    temp: string
+    time: string
+    weather: string
+    wind: string
+    pressure: string
+    visibility: string
+    sky: string
+
+
 class MetarCoordinator:
     def __init__(self, haas: ha_core.HomeAssistant):
         self._haas = haas
-        self._sensors_data = None
+        self.sensors_data = None
         self._codes = []
+
+    def get(self, code: string) -> MetarAirport:
+        return self.sensors_data[code]
 
     def add_code(self, code: string):
         self._codes.append(code)
@@ -31,6 +46,9 @@ class MetarCoordinator:
             resp = await client.get(url)
             data = resp.json()
             for airport in data['data']:
-                airport_name = airport['icao']
-                _LOGGER.info("Coordinator: METAR ICAO=%s\n%s", airport_name, airport)
-                _LOGGER.info("Coordinator: METAR ICAO=%s\nTemp=%s", airport_name, airport['temperature']['celsius'])
+                data: MetarAirport = MetarAirport()
+                data.temp = airport['temperature']['celsius']
+                data.name = airport['icao']
+                data.time = airport['observed']
+                data.weather = airport['conditions']['text']
+                self.sensors_data[data.name] = data
