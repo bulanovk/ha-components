@@ -83,6 +83,7 @@ class MetarSensorEntity(Entity):
                 self._state = self._coordinator.get(self._code).time
             if self.type == 'temperature':
                 self._state = self._coordinator.get(self._code).temp
+                _LOGGER.info("METAR Temp=%s", self._state)
             elif self.type == 'weather':
                 self._state = self._coordinator.get(self._code).weather
             elif self.type == 'wind':
