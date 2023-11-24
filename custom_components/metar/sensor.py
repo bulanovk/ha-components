@@ -67,10 +67,10 @@ class MetarSensorEntity(Entity):
         """Return the unit of measurement."""
         return self._unit_of_measurement
 
-    def update(self):
+    async def async_update(self):
         """Get the latest data from Metar and updates the states."""
         try:
-            self._hass.add_job(self._coordinator.async_update())
+            await self._coordinator.async_update()
         except Exception:
             _LOGGER.error("Error when retrieving update data")
             return
