@@ -54,7 +54,7 @@ class MetarData:
         self.sensor_data = None
         self.async_sensor_data = None
         self._token = token
-        self._url = f'https://api.checkwx.com/metar/{self._airport_code}/decoded?x_api_key={self._token}'
+        self._url = f'https://api.checkwx.com/metar/{self._airport_code}/decoded?x-api-key={self._token}'
         self.update()
 
     @Throttle(SCAN_INTERVAL)
