@@ -8,7 +8,7 @@ from homeassistant import core as ha_core
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 from homeassistant.helpers.entity import Entity
 from homeassistant.util import Throttle
-
+from .core.coordinator import MetarCoordinator
 try:
     from urllib2 import urlopen
 except:
@@ -80,6 +80,8 @@ class MetarData:
 
 class MetarSensorEntity(Entity):
 
+    _coordinator: MetarCoordinator
+
     def __init__(self, hass: ha_core.HomeAssistant, name: string, weather_data: MetarData, sensor_type, temp_unit):
         self._state = None
         self._name = SENSOR_TYPES[sensor_type][0]
@@ -88,7 +90,7 @@ class MetarSensorEntity(Entity):
         self.type = sensor_type
         self.weather_data = weather_data
         self._hass = hass
-
+        self._coordinator  = hass.data[DOMAIN][COORDINATOR]
     @property
     def name(self):
         """Return the name of the sensor."""
@@ -107,7 +109,7 @@ class MetarSensorEntity(Entity):
 
     def update(self):
         """Get the latest data from Metar and updates the states."""
-
+        # self._hass.add_job(self._coordinator.async_update())
         try:
             self.weather_data.update()
         except URLCallError:

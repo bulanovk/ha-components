@@ -15,4 +15,4 @@ DOMAIN = "metar"
 CONF_AIRPORT_NAME = 'name'
 CONF_AIRPORT_CODE = 'code'
 CONF_TOKEN = "token"
-
+COORDINATOR = "coordinator"
