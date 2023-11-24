@@ -1,4 +1,3 @@
-import datetime
 import logging
 import string
 from datetime import timedelta
@@ -50,6 +49,5 @@ class MetarCoordinator:
                 data.temp = airport['temperature']['celsius']
                 data.name = airport['icao']
                 data.time = airport['observed']
-                # data.weather = airport['conditions']['text']
                 self.sensors_data[data.name] = data
                 _LOGGER.info("METAR Station:\n %s", data)

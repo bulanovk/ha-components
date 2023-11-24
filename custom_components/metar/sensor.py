@@ -12,14 +12,12 @@ from .const import *
 from .core.coordinator import MetarCoordinator
 
 SCAN_INTERVAL = timedelta(seconds=30)
-BASE_URL = "https://tgftp.nws.noaa.gov/data/observations/metar/stations/"
 
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_AIRPORT_NAME): cv.string,
     vol.Required(CONF_AIRPORT_CODE): cv.string,
-    vol.Optional(CONF_TOKEN): cv.string,
     vol.Optional(CONF_MONITORED_CONDITIONS, default=[]):
         vol.All(cv.ensure_list, [vol.In(SENSOR_TYPES)]),
 })
