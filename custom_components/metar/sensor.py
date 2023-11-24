@@ -11,7 +11,7 @@ from homeassistant.helpers.entity import Entity
 from .const import *
 from .core.coordinator import MetarCoordinator
 
-SCAN_INTERVAL = timedelta(seconds=3600)
+SCAN_INTERVAL = timedelta(seconds=30)
 BASE_URL = "https://tgftp.nws.noaa.gov/data/observations/metar/stations/"
 
 _LOGGER = logging.getLogger(__name__)
