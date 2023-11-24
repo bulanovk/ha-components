@@ -1,10 +1,8 @@
-import asyncio
 import logging
 import string
 from datetime import timedelta
 
 import homeassistant.helpers.config_validation as cv
-import httpx
 import voluptuous as vol
 from homeassistant import core as ha_core
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
@@ -35,14 +33,14 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 def setup_platform(hass: ha_core.HomeAssistant, conf: dict, add_entities, discovery_info=None):
     _LOGGER.debug("Sensor Init config=%s discovery=%s", conf, discovery_info)
-    # loop = asyncio.get_running_loop()
     if discovery_info is not None:
         config: dict = discovery_info["cfg"]
         data: MetarData = MetarData(str(config.get(CONF_AIRPORT_CODE)), hass.data[DOMAIN][CONF_TOKEN])
         dev = []
 
         for variable in config.get(CONF_MONITORED_CONDITIONS, ["temperature"]):
-            dev.append(MetarSensorEntity(str(config.get(CONF_AIRPORT_NAME)), data, variable, SENSOR_TYPES[variable][1]))
+            dev.append(
+                MetarSensorEntity(hass, str(config.get(CONF_AIRPORT_NAME)), data, variable, SENSOR_TYPES[variable][1]))
         add_entities(dev, True)
 
 
@@ -82,13 +80,14 @@ class MetarData:
 
 class MetarSensorEntity(Entity):
 
-    def __init__(self, name: string, weather_data: MetarData, sensor_type, temp_unit):
+    def __init__(self, hass: ha_core.HomeAssistant, name: string, weather_data: MetarData, sensor_type, temp_unit):
         self._state = None
         self._name = SENSOR_TYPES[sensor_type][0]
         self._unit_of_measurement = SENSOR_TYPES[sensor_type][1]
         self._airport_name = name
         self.type = sensor_type
         self.weather_data = weather_data
+        self._hass = hass
 
     @property
     def name(self):
