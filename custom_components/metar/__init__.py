@@ -15,7 +15,7 @@ SENSOR_SCHEMA = vol.Schema(
 CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema({
-            vol.Required(METAR_TOKEN_FIELD): cv.string,
+            vol.Required(CONF_TOKEN): cv.string,
             vol.Required("sensor"): cv.ensure_list_csv(SENSOR_SCHEMA),
         },
             extra=vol.ALLOW_EXTRA,
@@ -29,7 +29,7 @@ CONFIG_SCHEMA = vol.Schema(
 def setup(hass: core.HomeAssistant, config: dict) -> bool:
     """Set up the Home Heat Calc component."""
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][METAR_TOKEN_FIELD] = config[DOMAIN][METAR_TOKEN_FIELD]
+    hass.data[DOMAIN][CONF_TOKEN] = config[DOMAIN][CONF_TOKEN]
     for cfg in config[DOMAIN]["sensor"]:
         hass.helpers.discovery.load_platform('sensor', DOMAIN, {"cfg": cfg}, config)
     return True

@@ -3,9 +3,9 @@ import string
 from datetime import timedelta
 
 import homeassistant.helpers.config_validation as cv
+import httpx
 import voluptuous as vol
 from homeassistant import core
-from homeassistant.const import CONF_MONITORED_CONDITIONS
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 from homeassistant.helpers.entity import Entity
 from homeassistant.util import Throttle
@@ -16,7 +16,7 @@ except:
     from urllib.request import urlopen
 from metar import Metar
 
-from .const import SENSOR_TYPES, CONF_AIRPORT_NAME, TOKEN_FIELD, CONF_AIRPORT_CODE
+from .const import *
 
 SCAN_INTERVAL = timedelta(seconds=3600)
 BASE_URL = "https://tgftp.nws.noaa.gov/data/observations/metar/stations/"
@@ -26,7 +26,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_AIRPORT_NAME): cv.string,
     vol.Required(CONF_AIRPORT_CODE): cv.string,
-    vol.Optional(TOKEN_FIELD): cv.string,
+    vol.Optional(CONF_TOKEN): cv.string,
     vol.Optional(CONF_MONITORED_CONDITIONS, default=[]):
         vol.All(cv.ensure_list, [vol.In(SENSOR_TYPES)]),
 })
@@ -36,7 +36,8 @@ def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery
     _LOGGER.debug("Sensor Init config=%s discovery=%s", conf, discovery_info)
     if discovery_info is not None:
         config: dict = discovery_info["cfg"]
-        data: MetarData = MetarData(str(config.get(CONF_AIRPORT_CODE)))
+        data: MetarData = MetarData(str(config.get(CONF_AIRPORT_CODE)), hass.data[DOMAIN][CONF_TOKEN])
+        data.async_update()
         dev = []
 
         for variable in config.get(CONF_MONITORED_CONDITIONS, ["temperature"]):
@@ -45,11 +46,21 @@ def setup_platform(hass: core.HomeAssistant, conf: dict, add_entities, discovery
 
 
 class MetarData:
-    def __init__(self, airport_code: string):
+    def __init__(self, airport_code: string, token: string):
         """Initialize the data object."""
         self._airport_code = airport_code
         self.sensor_data = None
+        self.async_sensor_data = None
+        self._token = token
+        self._url = f'https://api.checkwx.com/metar/{self._airport_code}/decoded?x_api_key={self._token}'
         self.update()
+
+    @Throttle(SCAN_INTERVAL)
+    async def async_update(self):
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(self._url)
+            self.async_sensor_data = resp.json()
+            _LOGGER.info("KOBU: METAR %s", self.async_sensor_data)
 
     @Throttle(SCAN_INTERVAL)
     def update(self):
