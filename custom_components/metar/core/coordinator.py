@@ -28,7 +28,7 @@ class MetarAirport:
 class MetarCoordinator:
     def __init__(self, haas: ha_core.HomeAssistant):
         self._haas = haas
-        self.sensors_data = None
+        self.sensors_data = {}
         self._codes = []
 
     def get(self, code: string) -> MetarAirport:
