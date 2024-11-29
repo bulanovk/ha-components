@@ -5,6 +5,6 @@
   "documentation": "https://en.wikipedia.org/wiki/METAR",
   "dependencies": [],
   "codeowners": ["bulanovk"],
-  "requirements": [""],
+  "requirements": [],
   "config_flow": false
 }
