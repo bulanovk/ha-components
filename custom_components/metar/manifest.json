@@ -1,7 +1,7 @@
 {
   "domain": "metar",
   "name": "Metar weather",
-  "version": "2021.07.1",
+  "version": "2024.10.0",
   "documentation": "https://en.wikipedia.org/wiki/METAR",
   "dependencies": [],
   "codeowners": ["bulanovk"],
